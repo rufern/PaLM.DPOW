@@ -60,7 +60,7 @@ Table 1:XX.1-1 lists the transactions for each actor directly involved in the DP
 
 Note 1: *Place Work Order [LAB-102] and Accept Work Order [LAB-103] are optional as a group (the Additional Work Order Option). If an actor implements either transaction, it SHALL implement both. See Section 1:XX.2.*
 
-Note 2: *For [LAB-100], the `DPOW-SLIDE^IHE` flavour is the minimum required. Support for `DPOW-SPECIMEN^IHE` and `DPOW-BLOCK^IHE` flavours is optional and governed by the Specimen Registration Option and Block Registration Option respectively. See Section 1:XX.2.*
+Note 2: *For [LAB-100], the `DPOW-SLIDE` flavour is the minimum required. Support for `DPOW-SPECIMEN` and `DPOW-BLOCK` flavours is optional and governed by the Specimen Registration Option and Block Registration Option respectively. See Section 1:XX.2.*
 
 ### 1:XX.1.1 Actors
 
@@ -121,25 +121,25 @@ Options that may be selected for each actor in this profile are listed in Table 
 
 <p id="tXX.2-1" class="tableTitle"><strong>Table 1:XX.2-1: DPOW - Actors and Options</strong></p>
 
-| Actor | Option Name | Transaction / Flavour | Reference |
-|---|---|---|---|
-| Physical Asset Workflow Manager (PAWM) | Specimen Registration Option | [LAB-100] `DPOW-SPECIMEN^IHE` | Section 1:XX.2.1 |
-| | Block Registration Option | [LAB-100] `DPOW-BLOCK^IHE` | Section 1:XX.2.2 |
-| | Additional Work Order Option | [LAB-102] + [LAB-103] | Section 1:XX.2.3 |
-| Digital Asset Workflow Manager (DAWM) | Specimen Registration Option | [LAB-100] `DPOW-SPECIMEN^IHE` | Section 1:XX.2.1 |
-| | Block Registration Option | [LAB-100] `DPOW-BLOCK^IHE` | Section 1:XX.2.2 |
-| | Additional Work Order Option | [LAB-102] + [LAB-103] | Section 1:XX.2.3 |
+| Actor | Option Name | Transactions | Reference | Profile Option Identifier|
+|---|---|---|---|---|
+| Physical Asset Workflow Manager (PAWM) | Specimen Registration Option | [LAB-100] | Section 1:XX.2.1 | `DPOW-SPECIMEN` |
+| | Block Registration Option | [LAB-100] | Section 1:XX.2.2 | `DPOW-BLOCK` |
+| | Additional Work Order Option | [LAB-102] + [LAB-103] | Section 1:XX.2.3 | `DPOW-WORDER` |
+| Digital Asset Workflow Manager (DAWM) | Specimen Registration Option | [LAB-100] | Section 1:XX.2.1 | `DPOW-SPECIMEN` |
+| | Block Registration Option | [LAB-100] | Section 1:XX.2.2 | `DPOW-BLOCK` |
+| | Additional Work Order Option | [LAB-102] + [LAB-103] | Section 1:XX.2.3 | `DPOW-WORDER` |
 {: .grid}
 
-The **`DPOW-SLIDE^IHE` flavour of [LAB-100]** is the minimum required for both PAWM and DAWM. It covers the most common interoperability scenario - slide-level registration for digital pathology workflows.
+The `DPOW-SLIDE` flavour of [LAB-100] is the minimum required for both PAWM and DAWM. It covers the most common interoperability scenario - slide-level registration for digital pathology workflows.
 
 ### 1:XX.2.1 Specimen Registration Option
 
-The Specimen Registration Option adds support for specimen/container registration (`DPOW-SPECIMEN^IHE`). Laboratories that perform accessioning-level integration with the DAWM should implement this option. Both actors (PAWM and DAWM) SHALL declare the same set of [LAB-100] options to ensure that every flavour sent by the PAWM can be received and processed by the DAWM.
+The Specimen Registration Option adds support for specimen/container registration (`DPOW-SPECIMEN`). Laboratories that perform accessioning-level integration with the DAWM should implement this option. Both actors (PAWM and DAWM) SHALL declare the same set of [LAB-100] options to ensure that every flavour sent by the PAWM can be received and processed by the DAWM.
 
 ### 1:XX.2.2 Block Registration Option
 
-The Block Registration Option adds support for block/cassette registration (`DPOW-BLOCK^IHE`). Laboratories that expose grossing workflow data to the DAWM should implement this option.
+The Block Registration Option adds support for block/cassette registration (`DPOW-BLOCK`). Laboratories that expose grossing workflow data to the DAWM should implement this option.
 
 ### 1:XX.2.3 Additional Work Order Option
 
@@ -175,9 +175,9 @@ DPOW relies on the hierarchical physical asset model established in the Proposed
 graph TD
   P["Patient"]
   C["Case"]
-  S["Gross Tissue\n-> registered via [LAB-100]\nMSH-21: DPOW-SPECIMEN^IHE"]
-  B["Block / Cassette\n-> registered via [LAB-100]\nMSH-21: DPOW-BLOCK^IHE"]
-  G["Glass Slide\n-> registered via [LAB-100]\nMSH-21: DPOW-SLIDE^IHE"]
+  S["Gross Tissue\n-> registered via [LAB-100]\nDPOW-SPECIMEN"]
+  B["Block / Cassette\n-> registered via [LAB-100]\nDPOW-BLOCK"]
+  G["Glass Slide\n-> registered via [LAB-100]\nDPOW-SLIDE"]
   D["Digital Image\n-> notified via [LAB-104]"]
 
   P --> C --> S --> B --> G --> D
@@ -208,16 +208,15 @@ Upon receipt of a surgical specimen, the PAWM registers the specimen (container)
 
 - **Actors:** PAWM (source), DAWM (destination)
 - **Transaction:** Physical Asset Registration [LAB-100]
-- **MSH-21:** `DPOW-SPECIMEN^IHE`
-- **Message:** OML^O21
+- **Profile Option Identifier:** `DPOW-SPECIMEN`
 
 **Key parameters:**
 
-- Case accession number (unique per organisation) in SPM-30 / OBR-3, and in ORC-38 (Filler Order Group Number) for alignment with DPIA (see [Closed Issue 7](issues.html))
-- Container ID (unique per case) in SPM-2 / SAC-3
-- Specimen source site (SPM-8, ideally SCT), e.g., breast structure
-- Specimen type (SPM-4), e.g., TISS (tissue)
-- Fixative information in OBX-5 (CWE), e.g., Formalin (SCT)
+- Case accession number (unique per organisation)
+- Container ID (unique per case)
+- Specimen source site (ideally SCT), e.g., breast structure
+- Specimen type, e.g., TISS (tissue)
+- Fixative information
 
 ##### Process Flow
 
@@ -227,9 +226,8 @@ sequenceDiagram
   participant PAWM as PAWM
   participant DAWM as DAWM
 
-  PAWM->>DAWM: OML^O21 [LAB-100] MSH-21: DPOW-SPECIMEN^IHE<br/>Specimen registered<br/>(SPM-30: accession, SPM-8: source site SCT)
+  PAWM->>DAWM: [LAB-100] DPOW-SPECIMEN<br/>Specimen registered<br/>
   Note over DAWM: Case placeholder created
-  DAWM-->>PAWM: ORL^O22 (AA)
 ```
 
 #### 1:XX.4.2.2 Use Case #2: Block Creation During Grossing
@@ -240,15 +238,14 @@ During the grossing process, a histotechnologist creates tissue blocks from the 
 
 - **Actors:** PAWM (source), DAWM (destination)
 - **Transaction:** Physical Asset Registration [LAB-100]
-- **MSH-21:** `DPOW-BLOCK^IHE`
-- **Message:** OML^O21
+- **Profile Option Identifier:** `DPOW-BLOCK`
 
 **Key parameters:**
 
-- Block ID (unique per case) in SPM-2
-- Parent specimen ID in SPM-3
-- Specimen source site modifier (SPM-9, ideally SCT) for laterality
-- Embedding medium in OBX-5 (CWE), e.g., Paraffin wax (SCT)
+- Block ID (unique per case)
+- Parent specimen ID
+- Specimen source site modifier (ideally SCT) for laterality
+- Embedding medium
 
 ##### Process Flow
 
@@ -259,9 +256,8 @@ sequenceDiagram
   participant DAWM as DAWM
 
   loop For each block created during grossing
-    PAWM->>DAWM: OML^O21 [LAB-100] MSH-21: DPOW-BLOCK^IHE<br/>Block registered<br/>(SPM-2: block ID, SPM-3: parent specimen ID)
+    PAWM->>DAWM: [LAB-100] DPOW-BLOCK<br/>Block registered<br/>
     Note over DAWM: Case view updated with new block
-    DAWM-->>PAWM: ORL^O22 (AA)
   end
 ```
 
@@ -273,15 +269,14 @@ Glass slides are created from blocks. Each slide (stained or unstained) is regis
 
 - **Actors:** PAWM (source), DAWM (destination)
 - **Transaction:** Physical Asset Registration [LAB-100]
-- **MSH-21:** `DPOW-SLIDE^IHE`
-- **Message:** OML^O21
+- **Profile Option Identifier:** `DPOW-SLIDE`
 
 **Key parameters:**
 
-- Slide ID (unique per case) in SPM-2
-- Parent block ID in SPM-3
-- Stain information in OBX-5 (CWE), e.g., Hematoxylin + Eosin (SCT)
-- Container type (glass slide) in SPM-27 / SAC-48
+- Slide ID (unique per case)
+- Parent block ID
+- Stain information
+- Container type (glass slide)
 
 ##### Process Flow
 
@@ -291,15 +286,13 @@ sequenceDiagram
   participant PAWM as PAWM
   participant DAWM as DAWM
 
-  PAWM->>DAWM: OML^O21 [LAB-100] MSH-21: DPOW-SLIDE^IHE (ORC-1: NW)<br/>Slide registered - unstained<br/>(SAC-48: WSI, no OBX stain)
+  PAWM->>DAWM: [LAB-100] DPOW-SLIDE <br/>Slide registered - unstained<br/>
   Note over DAWM: Placeholder created<br/>(slide pending staining)
-  DAWM-->>PAWM: ORL^O22 (AA)
 
   Note over PAWM: Slide proceeds to stainer
 
-  PAWM->>DAWM: OML^O21 [LAB-100] MSH-21: DPOW-SLIDE^IHE (ORC-1: XO)<br/>Slide updated - stained<br/>(OBX-5: H&E stain SCT codes)
+  PAWM->>DAWM: [LAB-100] DPOW-SLIDE<br/>Slide updated - stained<br/>
   Note over DAWM: Placeholder updated<br/>with stain metadata
-  DAWM-->>PAWM: ORL^O22 (AA)
 ```
 
 #### 1:XX.4.2.4 Use Case #4: Case Update
@@ -310,13 +303,11 @@ At key points in the case lifecycle, either the PAWM or DAWM sends a case-level 
 
 - **Actors:** PAWM or DAWM (source), the other actor (destination)
 - **Transaction:** Case Update [LAB-101]
-- **MSH-21:** `DPOW-CASE-UPDATE^IHE`
-- **Message:** OML^O21
 
 **Key parameters:**
 
-- ORC-5 (Order Status): high-level case state
-- ORC-25 (Order Status Modifier): case sub-status; see value set in [3.LAB-101](LAB-101.html)
+- Order Status: high-level case state
+- Order Status Modifier: case sub-status; see value set in [3.LAB-101](LAB-101.html)
 
 ##### Process Flow
 
@@ -326,23 +317,19 @@ sequenceDiagram
   participant PAWM as PAWM
   participant DAWM as DAWM
 
-  PAWM->>DAWM: OML^O21 [LAB-101] (ORC-1: NW)<br/>Case registered (Requested)
-  DAWM-->>PAWM: ORL^O22 (AA)
+  PAWM->>DAWM: [LAB-101]<br/>Case registered (Requested)
 
   Note over PAWM: Examination in progress
 
-  PAWM->>DAWM: OML^O21 [LAB-101] (ORC-1: SC, ORC-5: IP)<br/>Examination started (InProgress)
-  DAWM-->>PAWM: ORL^O22 (AA)
+  PAWM->>DAWM: [LAB-101]<br/>Examination started (InProgress)
 
   Note over PAWM: Examination completed, awaiting reading
 
-  PAWM->>DAWM: OML^O21 [LAB-101] (ORC-1: SC, ORC-5: CM)<br/>Examination completed
-  DAWM-->>PAWM: ORL^O22 (AA)
-
+  PAWM->>DAWM: [LAB-101]<br/>Examination completed
+ 
   Note over DAWM: Report signed as final
 
-  DAWM->>PAWM: OML^O21 [LAB-101] (ORC-1: SC, ORC-5: CM, ORC-25: Final)<br/>Report final
-  PAWM-->>DAWM: ORL^O22 (AA)
+  DAWM->>PAWM: [LAB-101]<br/>Report final
 ```
 
 #### 1:XX.4.2.5 Use Case #5: Work Order (e.g., IHC, FISH, Recut)
@@ -353,9 +340,8 @@ A pathologist or histotechnologist, via the DAWM, requests additional work on a 
 
 - **Actors:** DAWM (order placer), PAWM (order filler)
 - **Transactions:** Place Work Order [LAB-102] (DAWM->PAWM), Accept Work Order [LAB-103] (PAWM->DAWM)
-- **Message:** OML^O21
 
-[LAB-103] is sent once, when the PAWM has accepted and fulfilled the order: ORC-5 = `CM`, with SPM-2.1 carrying the placer identifier and SPM-2.2 the filler-assigned identifier of the new asset. If the PAWM cannot accept or fulfil the order, that is conveyed in the `ORL^O22` acknowledgement to [LAB-102] (ORC-1 = `UA`) and no [LAB-103] is sent.
+[LAB-103] is sent once, when the PAWM has accepted and fulfilled the order. If the PAWM cannot accept or fulfil the order, it should acknowledge accordingly and no [LAB-103] is sent.
 
 ##### Process Flow
 
@@ -365,29 +351,26 @@ sequenceDiagram
   participant DAWM as DAWM
   participant PAWM as PAWM
 
-  DAWM->>PAWM: OML^O21 [LAB-102] (ORC-1: NW)<br/>Place Work Order<br/>(e.g., IHC Ki-67 on Block A1)<br/>(SPM-3: parent block ID, SPM-2.1: DAWM temp ID)
-  PAWM-->>DAWM: ORL^O22 (accepted: ORC-1 OK / cannot fulfil: ORC-1 UA)
+  DAWM->>PAWM: [LAB-102] (ORC-1: NW)<br/>Place Work Order<br/>(e.g., IHC Ki-67 on Block A1)<br/>
+  PAWM-->>DAWM:
 
   Note over PAWM: PAWM accepts and fulfils the order<br/>(technician cuts slide, applies stain)
 
-  PAWM->>DAWM: OML^O21 [LAB-103] (ORC-5: CM)<br/>Work order accepted and fulfilled<br/>(SPM-2.1: placer ID, SPM-2.2: filler-assigned slide ID)
-  DAWM-->>PAWM: ORL^O22 (AA)
+  PAWM->>DAWM: [LAB-103]<br/>Work order accepted and fulfilled<br/>
 
   Note over PAWM: New slide created -> LAB-100 follows
-  PAWM->>DAWM: OML^O21 [LAB-100] MSH-21: DPOW-SLIDE^IHE<br/>New slide registered
-  DAWM-->>PAWM: ORL^O22 (AA)
+  PAWM->>DAWM: [LAB-100] DPOW-SLIDE<br/>New slide registered
 ```
 
 #### 1:XX.4.2.6 Use Case #6: Digital Image Availability Notification
 
 ##### Use Case Description
 
-When a whole slide image becomes available in the IMA (following acquisition via DPIA), the IMA notifies the PAWM and DAWM. This enables the DAWM to update the case view and trigger further workflow steps. A subsequent Case Update [LAB-101] with `ORC-5: CM` (all expected images imported) may follow.
+When a whole slide image becomes available in the IMA (following acquisition via DPIA), the IMA notifies the PAWM and DAWM. This enables the DAWM to update the case view and trigger further workflow steps. A subsequent Case Update [LAB-101] may follow.
 [LAB-104] is naturally linked to the IHE DPIA transaction "Completion Document Stored".
 
 - **Actors:** IMA (source), PAWM and DAWM (destinations)
 - **Transaction:** Image Availability Notification [LAB-104]
-- **Message:** OML^O21
 
 ##### Process Flow
 
@@ -400,8 +383,8 @@ sequenceDiagram
 
   Note over IMA: WSI acquisition complete
 
-  IMA->>PAWM: OML^O21 [LAB-104]<br/>Image available<br/>(SPM-2: slide ID, SPM-18: scan DT, SPM-20: Y)
-  IMA->>DAWM: OML^O21 [LAB-104]<br/>Image available<br/>(SPM-2: slide ID, SPM-18: scan DT, SPM-20: Y)
+  IMA->>PAWM: [LAB-104]<br/>Image available<br/>
+  IMA->>DAWM: [LAB-104]<br/>Image available<br/>
 
   Note over DAWM: Case updated - image available
 ```
@@ -410,11 +393,10 @@ sequenceDiagram
 
 ##### Use Case Description
 
-An image may need to be removed or flagged from the case view - for example, a 20x scan deemed insufficient is superseded by a 40x rescan. The IMA notifies the PAWM and DAWM of the removal or de-association using `SPM-20 = N`.
+An image may need to be removed or flagged from the case view - for example, a 20x scan deemed insufficient is superseded by a 40x rescan. The IMA notifies the PAWM and DAWM of the removal or de-association.
 
 - **Actors:** IMA (source), PAWM and DAWM (destinations)
 - **Transaction:** Image Availability Notification [LAB-104]
-- **Message:** OML^O21
 
 > **Note:** The notification is sent only when there are no more slide images associated to a physical asset.
 
