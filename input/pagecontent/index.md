@@ -1,6 +1,6 @@
 The Digital Pathology Ordering & Workflow (DPOW) Profile empowers the different systems in the digital pathology ecosystem with the data needed to drive the reading and ordering workflow. It addresses physical specimen registration (specimen, block, slide), case-level synchronisation, digital image availability notification, and the ordering of additional techniques. These use cases are expressed as messaging transactions using **HL7® v2.5.1**.
 
-DPOW defines three actors - the **Physical Asset Workflow Manager (PAWM)**, the **Digital Asset Workflow Manager (DAWM)**, and the **Image Manager / Image Archive (IMA)** - and the HL7 v2 transactions between them. Adherence to the IHE Digital Pathology Image Acquisition (DPIA) profile plays an important role in a successful DPOW implementation, particularly because of the enriched metadata associated with DICOM Whole Slide Imaging (WSI) objects.
+DPOW defines three actors - the **Physical Asset Workflow Manager (PAWM)**, the **Digital Asset Workflow Manager (DAWM)**, and the **Image Manager / Image Archive (IMA)** - and the HL7 v2 transactions between them.
 
 <div markdown="1" class="stu-note">
 
