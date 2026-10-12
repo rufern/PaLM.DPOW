@@ -12,6 +12,10 @@ Revision 0.1 (Draft for Public Comment) incorporates the outcomes of the ECDP 20
 - **HL7 version fixed to v2.5.1** with named pre-adoptions (PRT, ORC-34, SAC-48, ORC-38), replacing the earlier v2.5.1-vs-v2.9.1 ambiguity (Issue 3).
 - **Preparation metadata moved to OBX-5** (fixative, embedding medium, stain), aligning with DPIA and deprecating SPM-6.
 
+Further changes made while preparing Revision 0.1:
+
+- **Volume 1 made technology-neutral.** HL7 v2 message, segment, and field detail is specified only in Volume 2. Each actor option carries a Profile Option Identifier (`DPOW-SPECIMEN`, `DPOW-BLOCK`, `DPOW-WORDER`), which Volume 2 maps to the MSH-21 message profile values (Volume 2 Appendix A.1).
+
 ## Issues
 
 ### Submit an Issue

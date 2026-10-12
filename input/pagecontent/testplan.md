@@ -21,15 +21,15 @@ Integration testing in this context is where two SUTs of paired actors test agai
 
 *(Draft - for discussion at PaLM TC. Pass criteria require validation - see WI-DPOW-01.)*
 
-| Test ID | Description | Actors | Pass Criteria |
-|---|---|---|---|
-| DPOW-T01 | Specimen registration [LAB-100] `DPOW-SPECIMEN^IHE` | PAWM -> DAWM | DAWM creates case entry; `ORL^O22` AA returned |
-| DPOW-T02 | Block registration [LAB-100] `DPOW-BLOCK^IHE` | PAWM -> DAWM | DAWM updates case; parent SPM-3 linkage correct |
-| DPOW-T03 | Stained slide registration [LAB-100] `DPOW-SLIDE^IHE` | PAWM -> DAWM | Slide appears in DAWM with correct OBX stain metadata |
-| DPOW-T04 | Unstained slide + stain update ([LAB-100] x 2) | PAWM -> DAWM | Placeholder created; updated with stain OBX when stained |
-| DPOW-T05 | Case status update [LAB-101] | PAWM <-> DAWM | Correct ORC-5/ORC-25 pair received; `ORL^O22` AA returned |
-| DPOW-T06 | Work order - IHC ([LAB-102] + [LAB-103]) | DAWM -> PAWM -> DAWM | Order placed and acknowledged (accept / ORC-1 UA if not fulfillable); on acceptance a single [LAB-103] fulfilment received (ORC-5 CM, SPM-2.2 set); new [LAB-100] slide follows |
-| DPOW-T07 | Image availability notification [LAB-104] SPM-20=Y | IMA -> PAWM, DAWM | DAWM marks case ready; Study UID accessible |
-| DPOW-T08 | Image de-association [LAB-104] SPM-20=N | IMA -> PAWM, DAWM | DAWM hides/flags superseded scan |
-| DPOW-T09 | Full workflow end-to-end | PAWM + IMA + DAWM | All steps DPOW-T01 through T08 complete in sequence |
+| Test ID | Description | Actors | Option | Pass Criteria |
+|---|---|---|---|---|
+| DPOW-T01 | Specimen registration [LAB-100] `DPOW-SPECIMEN^IHE` | PAWM -> DAWM | `DPOW-SPECIMEN` | DAWM creates case entry; `ORL^O22` AA returned |
+| DPOW-T02 | Block registration [LAB-100] `DPOW-BLOCK^IHE` | PAWM -> DAWM | `DPOW-BLOCK` | DAWM updates case; parent SPM-3 linkage correct |
+| DPOW-T03 | Stained slide registration [LAB-100] `DPOW-SLIDE^IHE` | PAWM -> DAWM | - | Slide appears in DAWM with correct OBX stain metadata |
+| DPOW-T04 | Unstained slide + stain update ([LAB-100] x 2) | PAWM -> DAWM | - | Placeholder created; updated with stain OBX when stained |
+| DPOW-T05 | Case status update [LAB-101] | PAWM <-> DAWM | - | Correct ORC-5/ORC-25 pair received; `ORL^O22` AA returned |
+| DPOW-T06 | Work order - IHC ([LAB-102] + [LAB-103]) | DAWM -> PAWM -> DAWM | `DPOW-WORDER` | Order placed and acknowledged (accept / ORC-1 UA if not fulfillable); on acceptance a single [LAB-103] fulfilment received (ORC-5 CM, SPM-2.2 set); new [LAB-100] slide follows |
+| DPOW-T07 | Image availability notification [LAB-104] SPM-20=Y | IMA -> PAWM, DAWM | - | DAWM marks case ready; Study UID accessible |
+| DPOW-T08 | Image de-association [LAB-104] SPM-20=N | IMA -> PAWM, DAWM | - | PAWM and DAWM clear the images-available indication for the slide |
+| DPOW-T09 | Full workflow end-to-end | PAWM + IMA + DAWM | - | All steps of DPOW-T01 through T08 that apply to the options both partners declare complete in sequence |
 {: .grid}
