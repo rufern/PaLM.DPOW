@@ -72,6 +72,8 @@ ORDER                     [1..1]
   OBSERVATION_REQUEST     [1..1]
     OBR                   [1..1]
     NTE                   [0..*]
+    SPECIMEN              [1..1]
+      SPM                 [1..1]   SPM-3 parent asset / SPM-2.1 placer temp ID
 ```
 
 **Accept Work Order** - `DPOW-ACCEPT-WO^IHE` (Accept Work Order [LAB-103])
@@ -124,18 +126,20 @@ ORDER                     [0..*]
 | 21 | EI | R | [1..1] | Message Profile Identifier |
 {: .grid}
 
-MSH-21 SHALL reference the applicable DPOW transaction:
+MSH-21 SHALL reference the applicable DPOW transaction. The last column links each message profile to the actor option, defined in [Volume 1, Section 1:XX.2](volume-1.html#actor-options), that governs its support; "-" means that support does not depend on an option.
 
-| IHE DPOW Transaction | Transaction Name | MSH-21 Value |
-|---|---|---|
-| LAB-100 (specimen) | Physical Asset Registration - Specimen | `DPOW-SPECIMEN^IHE` |
-| LAB-100 (block) | Physical Asset Registration - Block | `DPOW-BLOCK^IHE` |
-| LAB-100 (slide) | Physical Asset Registration - Slide | `DPOW-SLIDE^IHE` |
-| LAB-101 | Case Update | `DPOW-CASE-UPDATE^IHE` |
-| LAB-102 | Place Work Order | `DPOW-PLACE-WO^IHE` |
-| LAB-103 | Accept Work Order | `DPOW-ACCEPT-WO^IHE` |
-| LAB-104 | Image Availability Notification | `DPOW-IMAGE-NOTIF^IHE` |
+| IHE DPOW Transaction | Transaction Name | MSH-21 Value | Volume 1 Option (Profile Option Identifier) |
+|---|---|---|---|
+| LAB-100 (specimen) | Physical Asset Registration - Specimen | `DPOW-SPECIMEN^IHE` | Specimen Registration Option (`DPOW-SPECIMEN`) |
+| LAB-100 (block) | Physical Asset Registration - Block | `DPOW-BLOCK^IHE` | Block Registration Option (`DPOW-BLOCK`) |
+| LAB-100 (slide) | Physical Asset Registration - Slide | `DPOW-SLIDE^IHE` | - (required) |
+| LAB-101 | Case Update | `DPOW-CASE-UPDATE^IHE` | - (required) |
+| LAB-102 | Place Work Order | `DPOW-PLACE-WO^IHE` | Additional Work Order Option (`DPOW-WORDER`) |
+| LAB-103 | Accept Work Order | `DPOW-ACCEPT-WO^IHE` | Additional Work Order Option (`DPOW-WORDER`) |
+| LAB-104 | Image Availability Notification | `DPOW-IMAGE-NOTIF^IHE` | - (required) |
 {: .grid}
+
+Profile Option Identifiers identify actor options (Volume 1); they are not message content and are never sent in MSH-21.
 
 ### A.2 ORC Segment
 
@@ -156,7 +160,7 @@ MSH-21 SHALL reference the applicable DPOW transaction:
 
 > **Pre-adoption note:** ORC-34 was introduced in HL7 v2.9. Its use in DPOW (targeting HL7 v2.5.1) is a pre-adoption. Implementations SHALL declare support for this field.
 
-> **Pre-adoption note:** ORC-38 (Filler Order Group Number) was introduced in HL7 v2.9. Its use in DPOW (targeting HL7 v2.5.1) is a pre-adoption to carry the case accession number for DPIA alignment; implementations SHALL declare support for this field.
+> **Pre-adoption note:** ORC-38 (Filler Order Group Number) was introduced in HL7 v2.9. Its use in DPOW (targeting HL7 v2.5.1) is a pre-adoption to carry the case accession number for DPIA alignment (see [Closed Issue 7](issues.html)); implementations SHALL declare support for this field.
 
 | Value | Display Name | Comment |
 |---|---|---|
